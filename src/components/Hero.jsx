@@ -1,13 +1,77 @@
-import { useState, useEffect } from 'react'
-import { MessageCircle, Calendar, ArrowDown } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { MessageCircle, Calendar, ArrowDown, Sparkles, ChevronRight } from 'lucide-react'
 
 const Hero = () => {
   const [scrollY, setScrollY] = useState(0)
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [imagesLoaded, setImagesLoaded] = useState(false)
+  const imageRefs = useRef([])
+
+  // High-quality catering images
+  const heroImages = [
+    {
+      url: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200&q=90',
+      alt: 'Elegant Wedding Catering Setup',
+      title: 'Wedding Excellence'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=1200&q=90',
+      alt: 'Gourmet Food Presentation',
+      title: 'Culinary Artistry'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1200&q=90',
+      alt: 'Premium Buffet Service',
+      title: 'Premium Service'
+    },
+    {
+      url: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&q=90',
+      alt: 'Fine Dining Experience',
+      title: 'Fine Dining'
+    },
+  ]
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY)
     window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    
+    const handleMouseMove = (e) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth - 0.5) * 30,
+        y: (e.clientY / window.innerHeight - 0.5) * 30,
+      })
+    }
+    window.addEventListener('mousemove', handleMouseMove)
+    
+    // Preload images
+    const imagePromises = heroImages.map((img, index) => {
+      return new Promise((resolve) => {
+        const image = new Image()
+        image.src = img.url
+        image.onload = () => {
+          if (imageRefs.current[index]) {
+            imageRefs.current[index].style.opacity = '1'
+          }
+          resolve()
+        }
+      })
+    })
+    
+    Promise.all(imagePromises).then(() => {
+      setImagesLoaded(true)
+    })
+    
+    // Auto-rotate images
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length)
+    }, 5000)
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('mousemove', handleMouseMove)
+      clearInterval(interval)
+    }
   }, [])
 
   const handleWhatsAppClick = () => {
@@ -18,74 +82,175 @@ const Hero = () => {
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
   }
 
+  const goToImage = (index) => {
+    setCurrentImageIndex(index)
+  }
+
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative min-h-screen flex items-center overflow-hidden bg-gray-900"
     >
-      {/* Parallax Background */}
-      <div
-        className="absolute inset-0 bg-gradient-to-br from-red-500/20 via-orange-500/20 to-amber-500/20"
-        style={{
-          transform: `translateY(${scrollY * 0.5}px)`,
-        }}
-      />
-      
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-red-300/30 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-orange-300/30 rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }} />
-        <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-amber-300/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+      {/* Image Gallery - Premium Layout */}
+      <div className="absolute inset-0">
+        {heroImages.map((image, index) => (
+          <div
+            key={index}
+            ref={(el) => (imageRefs.current[index] = el)}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
+            }`}
+            style={{
+              transform: `translate(${index === currentImageIndex ? mousePosition.x * 0.1 : 0}px, ${index === currentImageIndex ? mousePosition.y * 0.1 : 0}px) scale(${index === currentImageIndex ? 1.05 : 1})`,
+              transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 1s ease-in-out',
+            }}
+          >
+            <img
+              src={image.url}
+              alt={image.alt}
+              className="w-full h-full object-cover"
+              loading="eager"
+              style={{
+                filter: 'brightness(0.4)',
+              }}
+            />
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-900/60 to-gray-900/80" />
+            <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-transparent to-transparent" />
+          </div>
+        ))}
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 container-custom text-center px-4 py-20 md:py-32">
-        <div className="animate-fade-in">
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-display font-bold mb-6 leading-tight">
-            <span className="gradient-text">Premium Catering Services</span>
-            <br />
-            <span className="text-gray-800">For Every Occasion</span>
-          </h1>
-          
-          <p className="text-lg md:text-xl lg:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Experience luxury dining with our exquisite menus, trained chefs, and impeccable service. 
-            Making your special moments unforgettable, one dish at a time.
-          </p>
+      {/* Subtle Pattern Overlay */}
+      <div className="absolute inset-0 opacity-[0.03] z-20 pointer-events-none">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `radial-gradient(circle at 2px 2px, rgb(255,255,255) 1px, transparent 0)`,
+          backgroundSize: '60px 60px'
+        }} />
+      </div>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 mb-12">
-            <button
-              onClick={handleBookNow}
-              className="group bg-gradient-to-r from-red-600 to-orange-600 text-white px-8 py-4 rounded-full font-semibold text-lg hover:from-red-700 hover:to-orange-700 transition-all duration-300 shadow-2xl hover:shadow-red-500/50 transform hover:scale-105 flex items-center space-x-2 w-full sm:w-auto justify-center"
-            >
-              <Calendar size={24} />
-              <span>Book Now</span>
-            </button>
+      {/* Content - Premium Layout */}
+      <div className="relative z-30 container-custom px-4 py-16 md:py-20">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[calc(100vh-80px)]">
+          {/* Left: Text Content */}
+          <div className="text-white space-y-6 animate-fade-in-slow">
+            {/* Elegant Badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-2 animate-slide-up">
+              <Sparkles size={12} className="text-amber-400" />
+              <span className="text-xs font-medium text-white/90 tracking-wide uppercase">
+                Premium Culinary Experiences
+              </span>
+            </div>
+
+            {/* Main Heading - Premium Typography */}
+            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold leading-[1.1] tracking-tight">
+              <span className="block text-white mb-1 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+                Premium
+              </span>
+              <span className="block text-white mb-1 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+                Catering
+              </span>
+              <span className="block text-amber-400 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+                For Every Occasion
+              </span>
+            </h1>
             
-            <button
-              onClick={handleWhatsAppClick}
-              className="group glass px-8 py-4 rounded-full font-semibold text-lg text-gray-800 hover:bg-white/90 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:scale-105 flex items-center space-x-2 w-full sm:w-auto justify-center border-2 border-green-500/20 hover:border-green-500/40"
+            {/* Subheading - Elegant */}
+            <p 
+              className="text-base md:text-lg lg:text-xl text-white/90 leading-relaxed font-light text-balance max-w-xl animate-slide-up"
+              style={{ animationDelay: '0.5s' }}
             >
-              <MessageCircle size={24} className="text-green-600" />
-              <span>Chat on WhatsApp</span>
-            </button>
+              Crafting memorable moments through exquisite cuisine, impeccable service, 
+              and attention to every detail.
+            </p>
+
+            {/* CTA Buttons - Premium Design */}
+            <div 
+              className="flex flex-col sm:flex-row items-start gap-3 md:gap-4 animate-slide-up"
+              style={{ animationDelay: '0.6s' }}
+            >
+              <button
+                onClick={handleBookNow}
+                className="group relative bg-white text-gray-900 px-6 py-3 font-medium text-sm tracking-wide hover:bg-gray-100 transition-all duration-300 premium-shadow hover:premium-shadow-lg transform hover:scale-[1.02] flex items-center space-x-2 uppercase"
+              >
+                <Calendar size={18} />
+                <span>Book Now</span>
+                <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
+              </button>
+              
+              <button
+                onClick={handleWhatsAppClick}
+                className="group bg-transparent text-white px-6 py-3 font-medium text-sm tracking-wide border-2 border-white/50 hover:border-white hover:bg-white/10 transition-all duration-300 premium-shadow hover:premium-shadow-lg transform hover:scale-[1.02] flex items-center space-x-2 uppercase backdrop-blur-sm"
+              >
+                <MessageCircle size={18} />
+                <span>Chat on WhatsApp</span>
+              </button>
+            </div>
           </div>
 
-          {/* Scroll Indicator */}
-          <div className="animate-bounce">
-            <a
-              href="#about"
-              className="inline-flex flex-col items-center text-gray-600 hover:text-red-600 transition-colors"
-            >
-              <span className="text-sm mb-2">Scroll to explore</span>
-              <ArrowDown size={24} />
-            </a>
+          {/* Right: Image Showcase */}
+          <div className="relative hidden lg:block">
+            <div className="relative aspect-[4/5] max-w-md mx-auto">
+              {/* Main Featured Image */}
+              <div className="absolute inset-0 rounded-sm overflow-hidden premium-shadow-lg">
+                <img
+                  src={heroImages[currentImageIndex].url}
+                  alt={heroImages[currentImageIndex].alt}
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out"
+                  style={{
+                    transform: `scale(1.1) translate(${mousePosition.x * 0.05}px, ${mousePosition.y * 0.05}px)`,
+                  }}
+                />
+              </div>
+              
+              {/* Decorative Frame */}
+              <div className="absolute -inset-4 border-2 border-white/20 rounded-sm" />
+              <div className="absolute -inset-8 border border-white/10 rounded-sm" />
+              
+              {/* Image Title Overlay */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                <p className="text-white font-display text-xl font-medium">
+                  {heroImages[currentImageIndex].title}
+                </p>
+              </div>
+            </div>
+
+            {/* Image Navigation Dots */}
+            <div className="flex justify-center gap-2 mt-8">
+              {heroImages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToImage(index)}
+                  className={`h-1.5 transition-all duration-300 ${
+                    index === currentImageIndex
+                      ? 'w-8 bg-white'
+                      : 'w-1.5 bg-white/40 hover:bg-white/60'
+                  }`}
+                  aria-label={`Go to image ${index + 1}`}
+                />
+              ))}
+            </div>
           </div>
         </div>
+
+        {/* Elegant Scroll Indicator */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce">
+          <a
+            href="#about"
+            className="inline-flex flex-col items-center text-white/60 hover:text-white transition-colors group"
+          >
+            <span className="text-xs mb-2 tracking-widest uppercase font-medium">Explore More</span>
+            <div className="w-px h-8 bg-gradient-to-b from-white/60 to-transparent group-hover:from-white" />
+            <ArrowDown size={18} className="mt-1" />
+          </a>
+        </div>
       </div>
+
+      {/* Decorative Corner Elements */}
+      <div className="absolute top-0 left-0 w-32 h-32 border-t-2 border-l-2 border-white/10 z-20" />
+      <div className="absolute bottom-0 right-0 w-32 h-32 border-b-2 border-r-2 border-white/10 z-20" />
     </section>
   )
 }
 
 export default Hero
-

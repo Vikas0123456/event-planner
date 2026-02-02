@@ -35,13 +35,29 @@ export default {
       fontFamily: {
         'display': ['Playfair Display', 'serif'],
         'body': ['Inter', 'sans-serif'],
+        'elegant': ['Cormorant Garamond', 'serif'],
+      },
+      fontSize: {
+        'hero': ['clamp(3rem, 8vw, 8rem)', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
+        'display': ['clamp(2rem, 5vw, 4.5rem)', { lineHeight: '1.2', letterSpacing: '-0.01em' }],
+      },
+      spacing: {
+        '18': '4.5rem',
+        '88': '22rem',
+        '128': '32rem',
       },
       animation: {
-        'fade-in': 'fadeIn 0.6s ease-in-out',
-        'slide-up': 'slideUp 0.6s ease-out',
-        'slide-in-left': 'slideInLeft 0.6s ease-out',
-        'slide-in-right': 'slideInRight 0.6s ease-out',
-        'float': 'float 3s ease-in-out infinite',
+        'fade-in': 'fadeIn 0.8s ease-out',
+        'fade-in-slow': 'fadeIn 1.2s ease-out',
+        'slide-up': 'slideUp 0.8s ease-out',
+        'slide-up-slow': 'slideUp 1s ease-out',
+        'slide-in-left': 'slideInLeft 0.8s ease-out',
+        'slide-in-right': 'slideInRight 0.8s ease-out',
+        'float': 'float 6s ease-in-out infinite',
+        'float-slow': 'float 8s ease-in-out infinite',
+        'scale-in': 'scaleIn 0.6s ease-out',
+        'image-fade': 'imageFade 1.2s ease-out',
+        'slide-up-stagger': 'slideUpStagger 0.8s ease-out',
       },
       keyframes: {
         fadeIn: {
@@ -63,6 +79,18 @@ export default {
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-20px)' },
+        },
+        scaleIn: {
+          '0%': { transform: 'scale(0.95)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        imageFade: {
+          '0%': { opacity: '0', transform: 'scale(1.1)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        slideUpStagger: {
+          '0%': { transform: 'translateY(40px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
         },
       },
     },

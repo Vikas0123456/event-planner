@@ -29,40 +29,55 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-lg'
-          : 'bg-transparent'
+          ? 'bg-white/95 backdrop-blur-xl border-b border-gray-200/50'
+          : 'bg-black/20 backdrop-blur-md'
       }`}
     >
       <div className="container-custom">
         <div className="flex items-center justify-between h-16 md:h-20 px-4">
-          {/* Logo */}
-          <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-red-500 to-orange-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-display font-bold text-xl md:text-2xl">C</span>
+          {/* Logo - Premium */}
+          <a href="#home" className="flex items-center space-x-3 group">
+            <div className={`w-10 h-10 md:w-12 md:h-12 rounded-sm flex items-center justify-center transition-colors duration-300 ${
+              isScrolled ? 'bg-gray-900' : 'bg-white/20 backdrop-blur-sm'
+            }`}>
+              <span className={`font-display font-bold text-lg md:text-xl transition-colors ${
+                isScrolled ? 'text-white' : 'text-white'
+              }`}>C</span>
             </div>
-            <span className="font-display font-bold text-xl md:text-2xl gradient-text">
+            <span className={`font-display font-bold text-lg md:text-xl tracking-tight transition-colors ${
+              isScrolled ? 'text-gray-900' : 'text-white'
+            }`}>
               Catering
             </span>
-          </div>
+          </a>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - Premium */}
           <div className="hidden lg:flex items-center space-x-8">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                className="text-gray-700 hover:text-red-600 font-medium transition-colors duration-200"
+                className={`text-xs font-medium tracking-wide uppercase transition-colors duration-300 relative group ${
+                  isScrolled ? 'text-gray-700 hover:text-gray-900' : 'text-white/90 hover:text-white'
+                }`}
               >
                 {link.name}
+                <span className={`absolute bottom-0 left-0 w-0 h-0.5 transition-all duration-300 ${
+                  isScrolled ? 'bg-gray-900' : 'bg-white'
+                } group-hover:w-full`} />
               </a>
             ))}
             <button
               onClick={handleWhatsAppClick}
-              className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-2 rounded-full font-semibold hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center space-x-2"
+              className={`px-5 py-2 text-xs font-medium tracking-wide uppercase transition-all duration-300 flex items-center space-x-2 ${
+                isScrolled
+                  ? 'bg-gray-900 text-white hover:bg-gray-800 border-2 border-gray-900'
+                  : 'bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border-2 border-white/30'
+              }`}
             >
-              <Phone size={18} />
+              <Phone size={14} />
               <span>WhatsApp</span>
             </button>
           </div>
@@ -70,23 +85,33 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="lg:hidden text-gray-700 hover:text-red-600 transition-colors"
+            className={`lg:hidden transition-colors ${
+              isScrolled ? 'text-gray-900 hover:text-gray-700' : 'text-white hover:text-white/80'
+            }`}
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Premium */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden bg-white/95 backdrop-blur-md border-t border-gray-200">
-            <div className="px-4 py-4 space-y-3">
+          <div className={`lg:hidden backdrop-blur-xl border-t ${
+            isScrolled 
+              ? 'bg-white/98 border-gray-200' 
+              : 'bg-black/90 border-white/20'
+          }`}>
+            <div className="px-4 py-6 space-y-1">
               {navLinks.map((link) => (
                 <a
                   key={link.name}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block text-gray-700 hover:text-red-600 font-medium py-2 transition-colors"
+                  className={`block font-medium py-3 text-xs tracking-wide uppercase transition-colors border-b last:border-0 ${
+                    isScrolled
+                      ? 'text-gray-900 hover:text-gray-700 border-gray-100'
+                      : 'text-white hover:text-white/80 border-white/10'
+                  }`}
                 >
                   {link.name}
                 </a>
@@ -96,7 +121,11 @@ const Navbar = () => {
                   handleWhatsAppClick()
                   setIsMobileMenuOpen(false)
                 }}
-                className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-full font-semibold hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-lg flex items-center justify-center space-x-2 mt-4"
+                className={`w-full px-6 py-3 text-xs font-medium tracking-wide uppercase transition-all duration-300 shadow-lg flex items-center justify-center space-x-2 mt-4 border-2 ${
+                  isScrolled
+                    ? 'bg-gray-900 text-white hover:bg-gray-800 border-gray-900'
+                    : 'bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 border-white/30'
+                }`}
               >
                 <Phone size={18} />
                 <span>Chat on WhatsApp</span>
@@ -110,4 +139,3 @@ const Navbar = () => {
 }
 
 export default Navbar
-
