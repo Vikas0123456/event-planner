@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { MessageCircle, Calendar, ArrowDown, Sparkles, ChevronRight } from 'lucide-react'
+import { MessageCircle, Calendar, ArrowDown, ChevronRight } from 'lucide-react'
 
 const Hero = () => {
   const [scrollY, setScrollY] = useState(0)
@@ -130,44 +130,36 @@ const Hero = () => {
       </div>
 
       {/* Content - Premium Layout */}
-      <div className="relative z-30 container-custom px-4 py-16 md:py-20">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center min-h-[calc(100vh-80px)]">
+      <div className="relative z-30 container-custom px-4 sm:px-6 py-12 md:py-16 lg:py-20">
+        <div className="grid lg:grid-cols-2 gap-6 md:gap-8 lg:gap-12 items-center min-h-[calc(100vh-64px)] md:min-h-[calc(100vh-80px)]">
           {/* Left: Text Content */}
-          <div className="text-white space-y-6 animate-fade-in-slow">
-            {/* Elegant Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-2 animate-slide-up">
-              <Sparkles size={12} className="text-amber-400" />
-              <span className="text-xs font-medium text-white/90 tracking-wide uppercase">
-                Premium Culinary Experiences
-              </span>
-            </div>
-
-            {/* Main Heading - Premium Typography */}
+          <div className="text-white space-y-4 md:space-y-6 animate-fade-in-slow">
+            {/* Main Heading - Premium Typography with Text Reveal */}
             <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-display font-bold leading-[1.1] tracking-tight">
-              <span className="block text-white mb-1 animate-slide-up" style={{ animationDelay: '0.2s' }}>
+              <span className="block text-white mb-1 animate-text-reveal" style={{ animationDelay: '0.2s' }}>
                 Premium
               </span>
-              <span className="block text-white mb-1 animate-slide-up" style={{ animationDelay: '0.3s' }}>
+              <span className="block text-white mb-1 animate-text-reveal" style={{ animationDelay: '0.35s' }}>
                 Catering
               </span>
-              <span className="block text-amber-400 animate-slide-up" style={{ animationDelay: '0.4s' }}>
+              <span className="block text-amber-400 animate-text-reveal" style={{ animationDelay: '0.5s' }}>
                 For Every Occasion
               </span>
             </h1>
             
-            {/* Subheading - Elegant */}
+            {/* Subheading - Elegant with Fade Scale */}
             <p 
-              className="text-base md:text-lg lg:text-xl text-white/90 leading-relaxed font-light text-balance max-w-xl animate-slide-up"
-              style={{ animationDelay: '0.5s' }}
+              className="text-base md:text-lg lg:text-xl text-white/90 leading-relaxed font-light text-balance max-w-xl animate-fade-scale"
+              style={{ animationDelay: '0.65s' }}
             >
               Crafting memorable moments through exquisite cuisine, impeccable service, 
               and attention to every detail.
             </p>
 
-            {/* CTA Buttons - Premium Design */}
+            {/* CTA Buttons - Premium Design with Bounce */}
             <div 
-              className="flex flex-col sm:flex-row items-start gap-3 md:gap-4 animate-slide-up"
-              style={{ animationDelay: '0.6s' }}
+              className="flex flex-col sm:flex-row items-start gap-3 md:gap-4 animate-bounce-in"
+              style={{ animationDelay: '0.8s' }}
             >
               <button
                 onClick={handleBookNow}
@@ -190,7 +182,7 @@ const Hero = () => {
 
           {/* Right: Image Showcase */}
           <div className="relative hidden lg:block">
-            <div className="relative aspect-[4/5] max-w-md mx-auto">
+            <div className="relative aspect-[4/5] max-w-md mx-auto animate-slide-in-right">
               {/* Main Featured Image */}
               <div className="absolute inset-0 rounded-sm overflow-hidden premium-shadow-lg">
                 <img
@@ -232,18 +224,22 @@ const Hero = () => {
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Elegant Scroll Indicator */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce">
-          <a
-            href="#about"
-            className="inline-flex flex-col items-center text-white/60 hover:text-white transition-colors group"
-          >
-            <span className="text-xs mb-2 tracking-widest uppercase font-medium">Explore More</span>
-            <div className="w-px h-8 bg-gradient-to-b from-white/60 to-transparent group-hover:from-white" />
-            <ArrowDown size={18} className="mt-1" />
-          </a>
-        </div>
+      {/* Elegant Scroll Indicator - Fixed Position */}
+      <div className="absolute bottom-6 left-0 right-0 flex justify-center items-center z-40">
+        <a
+          href="#about"
+          onClick={(e) => {
+            e.preventDefault()
+            document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })
+          }}
+          className="inline-flex flex-col items-center text-white/70 hover:text-white transition-colors group animate-bounce"
+        >
+          <span className="text-xs mb-2 tracking-widest uppercase font-medium">Explore More</span>
+          <div className="w-px h-8 bg-gradient-to-b from-white/60 to-transparent group-hover:from-white" />
+          <ArrowDown size={18} className="mt-1" />
+        </a>
       </div>
 
       {/* Decorative Corner Elements */}
